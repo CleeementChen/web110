@@ -27,7 +27,12 @@ $status = $_SESSION['account']['status'];
         border: solid #4e73df;
     }
 
+    .outer a{
+        outline: none;
+        text-decoration: none;
+    }
 </style>
+
 <script>
     $('form').on('submit', function () {
         //送出表單前會觸發這部分
@@ -49,10 +54,10 @@ $status = $_SESSION['account']['status'];
                             '<b style="color:white;text-decoration:none;">確定</b>',
                         confirmButtonAriaLabel: '確定',
                         confirmButtonClass: 'insert_button'
-                    // }).then((result) => {                   /*是否確定*/
-                    //     if (result.isConfirmed) {
-                    //         document.location.href = "index.php?method=profo";   /*確認轉址 */
-                    //     }
+                    }).then((result) => {                   /*是否確定*/
+                        if (result.isConfirmed) {
+                            document.location.href = "index.php?method=profo";   /*確認轉址 */
+                        }
                     });
                 } else {
 
@@ -70,6 +75,7 @@ $status = $_SESSION['account']['status'];
         return false; //阻止瀏覽器轉跳到 send.php，因為已經用ajax送出去了
     })
 </script>
+
 <?php
 if($status == '使用者'){
 ?>
@@ -250,13 +256,13 @@ if($status == '使用者'){
 }
 ?>
 
-<form action="change_password.php" method="post">
 
-    <input type="hidden" name = "account_id" value = "<?php echo $account_id; ?>">
-    <center>
-        <input class="change-pass" type="submit" value="更改密碼">
-    </center>
-</form>
+<div class="outer">
+<center>
+    <a href="change_password.php?id=<?php echo $account_id; ?>"><div class="change-pass">更改密碼</div></a>
+</center>
+</div>
+
 
 
 <?php include "footer.php"; ?>

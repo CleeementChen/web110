@@ -58,7 +58,7 @@ if($error_check != false){
     $sql->execute([$name,$account_id,$phone,$password,'管理者']);
     echo '{"success":true}';
 }else{
-    echo '{"success": false,"checked":"'.$checked.'"}';
+    echo '{"success":false,"checked":"'.$checked.'"}';
     // echo "<script>alert('有錯誤');window.history.back(-1);</script>";die;
 }
 
