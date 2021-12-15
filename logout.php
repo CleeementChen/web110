@@ -1,0 +1,10 @@
+<?php
+//開啟Session
+session_start();
+//清除Session
+session_destroy();
+//導到login.php
+?>
+<script>
+    window.location='home.php';
+</script>
