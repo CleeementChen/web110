@@ -32,6 +32,11 @@ if(!preg_match("/^(?=.*\d)(?=.*[a-zA-Z]).{6,16}$/", $account_id)){
     $checked = "帳號格式不正確<br>(至少6碼以上並包含1個以上的英文字母與數字)";
 }
 
+if(!preg_match("/^(?=.*\d)(?=.*[a-zA-Z]).{6,16}$/", $password)){
+    $error_check = false;
+    $checked = "密碼格式不正確<br>(至少6碼以上並包含1個以上的英文字母與數字)";
+}
+
 // if(!preg_match("/^[a-zA-Z0-9]{6,16}$/", $account_id)){
 //     $error_check = false;
 //     $checked = "帳號格式不正確(至少6以上)";

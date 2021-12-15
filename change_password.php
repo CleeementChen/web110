@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<?php include "session_check.php"; ?>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,6 +17,17 @@
     <!--Font awesome-->
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 
 <body>
@@ -147,10 +158,12 @@
         }
 
     </style>
+
     <div class="center">
         <div class="x-icon"><a href="index.php?method=profo"><center><i class="fas fa-times"></i></center></a></div>
         <h1><i class="fas fa-user-lock"></i> 修改密碼</h1>
-        <form action="profo.php" method="post">
+        <form action="change_password_output.php" method="post">
+                <input type="hidden" name="account_id" value = "<?php echo $_POST['account_id']?>">
             <div class="txt_field">
                 <input type="password" name="password" maxlength="15" required>
                 <span></span>
@@ -170,5 +183,46 @@
         </form>
     </div>
 </body>
+<script>
+    $('form').on('submit', function () {
+        //送出表單前會觸發這部分
+        $.ajax({
+            url: 'change_password_output.php',      //要傳送的頁面
+            method: 'post',
+            dataType: 'json',           //回傳資料是json格式
+            data: $('form').serialize(), //將表單資料用打包起來送出去
+            success: function (res) {
+                //成功之後會執行這個方法
+                if (res.success == true) {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        icon: 'success',
+                        html:
+                            '<b>修改成功</b>',
+                        focusConfirm: false,
+                        confirmButtonText:
+                            '<b style="color:white;text-decoration:none;">確定</b>',
+                        confirmButtonAriaLabel: '確定',
+                        confirmButtonClass: 'insert_button'
+                    }).then((result) => {                   /*是否確定*/
+                        if (result.isConfirmed) {
+                            document.location.href = "index.php?method=profo";   /*確認轉址 */
+                        }
+                    });
+                } else {
 
+                    Swal.fire({
+                        icon: 'error',
+                        html:
+                            '<b>' + res.checked + '</b>',
+                        confirmButtonAriaLabel: '確定',
+                        confirmButtonClass: 'insert_button',
+                        confirmButtonText: '<b style="color:white;text-decoration:none;">確定</b>'
+                    })
+                }
+            },
+        });
+        return false; //阻止瀏覽器轉跳到 send.php，因為已經用ajax送出去了
+    })
+</script>
 </html>

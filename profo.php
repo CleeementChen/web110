@@ -2,11 +2,74 @@
 <?php include "band.php"; ?>
 <?php
 
+$account_id = $_SESSION['account']['account_id'];
 $name = $_SESSION['account']['name'];
 $phone = $_SESSION['account']['phone'];
 $status = $_SESSION['account']['status'];
 
 ?>
+
+<style>
+    .change-pass{
+        width: 120px;
+        height: 50px;
+        text-align: center;
+        font-size: 18px;
+        line-height: 28px;
+        text-align: center;
+        border-radius: 25px;
+        margin: 20px;
+        padding: 10px;
+        background: #4e73df;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        border: solid #4e73df;
+    }
+
+</style>
+<script>
+    $('form').on('submit', function () {
+        //送出表單前會觸發這部分
+        $.ajax({
+            url: 'key_profo_output.php',      //要傳送的頁面
+            method: 'post',
+            dataType: 'json',           //回傳資料是json格式
+            data: $('form').serialize(), //將表單資料用打包起來送出去
+            success: function (res) {
+                //成功之後會執行這個方法
+                if (res.success == true) {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        icon: 'success',
+                        html:
+                            '<b>新增成功</b>',
+                        focusConfirm: false,
+                        confirmButtonText:
+                            '<b style="color:white;text-decoration:none;">確定</b>',
+                        confirmButtonAriaLabel: '確定',
+                        confirmButtonClass: 'insert_button'
+                    // }).then((result) => {                   /*是否確定*/
+                    //     if (result.isConfirmed) {
+                    //         document.location.href = "index.php?method=profo";   /*確認轉址 */
+                    //     }
+                    });
+                } else {
+
+                    Swal.fire({
+                        icon: 'error',
+                        html:
+                            '<b>' + res.checked + '</b>',
+                        confirmButtonAriaLabel: '確定',
+                        confirmButtonClass: 'insert_button',
+                        confirmButtonText: '<b style="color:white;text-decoration:none;">確定</b>'
+                    })
+                }
+            },
+        });
+        return false; //阻止瀏覽器轉跳到 send.php，因為已經用ajax送出去了
+    })
+</script>
 <?php
 if($status == '使用者'){
 ?>
@@ -87,32 +150,8 @@ if($status == '使用者'){
         </div>
 
     </div>
-    <style>
-        .change-pass{
-            width: 120px;
-            height: 50px;
-            text-align: center;
-            font-size: 18px;
-            line-height: 28px;
-            text-align: center;
-            border-radius: 25px;
-            margin: 20px;
-            padding: 10px;
-            background: #4e73df;
-            text-decoration: none;
-            outline: none;
-            color: #fff;
-            border: solid #4e73df;
-        }
-
-    </style>
-    <center><input class="change-pass" type="submit" value="更改密碼" onclick="pass()"></center>
-
-    <script>
-        function pass(){
-            document.location.href="change_password.php";
-        }
-    </script>
+    
+    
 
 </div>
 
@@ -204,54 +243,21 @@ if($status == '使用者'){
             </center>
         </div>
     </div>
-    <script>
-            $('form').on('submit', function () {
-                //送出表單前會觸發這部分
-                $.ajax({
-                    url: 'key_profo_output.php',      //要傳送的頁面
-                    method: 'post',
-                    dataType: 'json',           //回傳資料是json格式
-                    data: $('form').serialize(), //將表單資料用打包起來送出去
-                    success: function (res) {
-                        //成功之後會執行這個方法
-                        if (res.success == true) {
-                            Swal.fire({
-                                allowOutsideClick: false,
-                                icon: 'success',
-                                html:
-                                    '<b>新增成功</b>',
-                                focusConfirm: false,
-                                confirmButtonText:
-                                    '<b style="color:white;text-decoration:none;">確定</b>',
-                                confirmButtonAriaLabel: '確定',
-                                confirmButtonClass: 'insert_button'
-                            }).then((result) => {                   /*是否確定*/
-                                if (result.isConfirmed) {
-                                    document.location.href = "index.php?method=profo";   /*確認轉址 */
-                                }
-                            });
-                        } else {
-
-                            Swal.fire({
-                                icon: 'error',
-                                html:
-                                    '<b>' + res.checked + '</b>',
-                                confirmButtonAriaLabel: '確定',
-                                confirmButtonClass: 'insert_button',
-                                confirmButtonText: '<b style="color:white;text-decoration:none;">確定</b>'
-                            })
-                        }
-                    },
-                });
-                return false; //阻止瀏覽器轉跳到 send.php，因為已經用ajax送出去了
-            })
-        </script>
 
 </div>
 
 <?php
 }
 ?>
+
+<form action="change_password.php" method="post">
+
+    <input type="hidden" name = "account_id" value = "<?php echo $account_id; ?>">
+    <center>
+        <input class="change-pass" type="submit" value="更改密碼">
+    </center>
+</form>
+
 
 <?php include "footer.php"; ?>
 
