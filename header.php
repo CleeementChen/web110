@@ -112,19 +112,39 @@
 
             <!-- Divider 分隔線-->
             <hr class="sidebar-divider d-none d-md-block">
+            <?php 
+            
+            if(isset($account_id)){
 
+            ?>
             <!-- Heading 小標-->
             <div class="sidebar-heading mt-2 mb-2">個人設定</div>
+            <?php
+            }
+            ?>
 
+            <?php
+                if($status == '使用者'){
+            ?>
             <li class="nav-item <?php if($method == 'profo'){echo " active";}?>">
                 <a class="nav-link" href="index.php?method=profo">
                     <i class="fas fa-user"></i>
                     <span>個人帳號</span></a>
             </li>
-
+            <?php
+                }elseif($status == '管理者'){
+            ?>
+            <li class="nav-item <?php if($method == 'profo'){echo " active";}?>">
+                <a class="nav-link" href="index.php?method=key_profo">
+                    <i class="fas fa-user"></i>
+                    <span>使用者帳號管理</span></a>
+            </li>
+            <?php
+                }
+            ?>
             <?php 
             
-            if(isset($_SESSION['account']['account_id'])){
+            if(isset($account_id)){
 
             ?>
             <li class="nav-item">
@@ -133,6 +153,15 @@
                     <span>登出</span></a>
             </li>
 
+            <?php
+            }else{
+                
+            ?>
+            <li class="nav-item">
+                <a class="nav-link" href="login.php">
+                    <i class="fas fa-power-off"></i>
+                    <span>登入</span></a>
+            </li>
             <?php
             }
             ?>

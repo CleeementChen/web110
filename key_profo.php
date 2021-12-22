@@ -3,6 +3,7 @@
 <?php
     session_start();
 ?>
+
 <div class="container-fluid mt-4">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">個人資料</h1>
@@ -28,7 +29,7 @@
             font-size: 18px;
         }
 
-        .sub button {
+        .sub input[type="submit"] {
             width: 80px;
             height: 50px;
             border: 1px solid;
@@ -41,7 +42,7 @@
             outline: none;
         }
 
-        .sub button :hover {
+        .sub input[type="submit"] :hover {
             border-color: #2691d9;
             transition: .5s;
         }
@@ -56,50 +57,41 @@
         <p class="ml-3">新增管理帳號</p>
         <div class="card-body text-alter">
             <center>
-                <form action="input.php" method="post">
+                <form action="key_profo_output.php" method="post">
     
                     <div class="col-lg-12 row mt-1">
-                    <div class="col-lg-3 mb-3">
+                        <div class="col-lg-3 mb-3">
                             <p class="ml-2">名稱</p>
-                            <input type="text" maxlength="15" name="name">
+                            <input type="text" maxlength="15" name="name" required>
                         </div>
                         <div class="col-lg-3 mb-3">
                             <p class="ml-2">帳號</p>
-                            <input type="text" maxlength="15" name="account_id">
+                            <input type="text" maxlength="15" name="account_id" required>
                         </div>
                         <div class="col-lg-3 mb-3">
                             <p class="ml-2">手機</p>
-                            <input type="text" maxlength="10" name="account_id">
+                            <input type="text" maxlength="10" name="phone" required>
                         </div>
                         <div class="col-lg-3">
                             <p class="ml-2">密碼</p>
-                            <input type="password" maxlength="15" name="password">
+                            <input type="password" maxlength="15" name="password" required>
                         </div>
                         <div class="col-lg-3">
                             <p class="ml-2">確認密碼</p>
-                            <input type="password" maxlength="15" name="password2">
+                            <input type="password" maxlength="15" name="password2" required>
                         </div>
                         
                     </div>
 
-                    <div class="sub mt-5"><button>新增</button></div>
+                    <div class="sub mt-5"><input type="submit" value="新增"></div>
                 </form>
+                
             </center>
+            
         </div>
     </div>
 
 </div>
-<script>
-    function appoint() {
-        Swal.fire({
-            title: '訂房須知',
-            html: '需於三日前訂房；入住當日無法退房；其他請參考首頁',
-            icon: "success",
-            confirmButtonText: "確定"
-        });
-    }
-<script>
 
-</div>
 
 <?php include "footer.php"; ?>
