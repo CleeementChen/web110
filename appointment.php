@@ -1,39 +1,68 @@
 <?php include "header.php"; ?>
 <?php include "band.php"; ?>
+<?php
+$pdo = new PDO('mysql:host=localhost;dbname=fjcu_inn;charset=utf8','root', '');
 
+$status = $pdo->query("select status from account where account_id = '$account_id' ");
+
+foreach($status as $status){
+    $check = $status['status'];
+}
+?>
 <div class="container-fluid mt-4">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">預約清單</h1>
     </div>
     <div class="row">
-        <div class="col-lg-4">
-            <div class="card mb-4 py-3 border-left-info">
-                <div class="card-body">
-                    <p>訂單號碼:00001</p>
-                    <p>房型:****</p>
-                    <p>訂房日期:****/**/** -> 離開日期:****/**/**</p>
-                    <a href="##" class="btn btn-danger btn-circle" onclick="del()">
-                        <i class="fas fa-trash"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card mb-4 py-3 border-left-info">
-                <div class="card-body">
-                    <p>訂單號碼:00002</p>
-                    <p>房型:****</p>
-                    <p>訂房日期:****/**/** -> 離開日期:****/**/**</p>
-                    <a class="btn btn-danger btn-circle" onclick="del()">
-                        <i class="fas fa-trash"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+
+        <?php
+
+                if($check == '使用者'){
+                    $sql = $pdo->query("select * from appointment_record where status = '已預訂' and account_id = '$account_id' ");
+                }else{
+                    $sql = $pdo->query("select * from appointment_record where status = '已預訂' ");
+                }
+                
+                
+                foreach($sql as $sql){
+                    $id = $sql['id'];
+                    $a_time = $sql['a_time'];
+                    $d_time = $sql['d_time'];
+                    $inn_style = $sql['inn_style'];
+        ?>
+
+                    <div class="col-lg-4">
+                        <div class="card mb-4 py-3 border-left-info">
+                            <div class="card-body">
+                                <p>訂單號碼: <?php echo $id ?></p>
+                                <p>房型: <?php echo $inn_style ?></p>
+                                <p>訂房日期: <?php echo $a_time ?> -> 離開日期: <?php echo $d_time ?></p>
+                                <?php
+                                    if($check == '管理者'){
+                                ?>
+                                <a href="##" class="btn btn-warning btn-circle mr-2" onclick="alt(<?php echo $id ?>)">
+                                    <i class="fas fa-wrench"></i>
+                                </a>
+                                <?php        
+                                    }
+                                ?>
+                                <a href="##" class="btn btn-danger btn-circle" onclick="del(<?php echo $id ?>)">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+        
+        <?php
+                }
+                $sql = NULL;
+            
+            // $result = NULL; 
+        ?>
 
     </div>
     <script>
-        function del() {
+        function del(id) {
             Swal.fire({
                 showCancelButton: "true",
                 title: '是否要取消訂房',
@@ -42,7 +71,21 @@
                 cancelButtonText: "取消"
             }).then((result) => {                   /*是否確定*/
                 if (result.isConfirmed) {    
-                    document.location.href="home.php";   /*確認轉址 */
+                    document.location.href="appointment_del.php?id="+id;   /*確認轉址 */
+                }
+            });
+        }
+
+        function alt(id) {
+            Swal.fire({
+                showCancelButton: "true",
+                title: '是否要修改訂房',
+                icon: "question",
+                confirmButtonText: "確定",
+                cancelButtonText: "取消"
+            }).then((result) => {                   /*是否確定*/
+                if (result.isConfirmed) {    
+                    document.location.href="alter_appointment.php?id="+id;   /*確認轉址 */
                 }
             });
         }
@@ -106,51 +149,94 @@
 
         <div class="card-body text-alter">
             <center>
-                <form method="post">
+                <form action="appointment_output.php" method="post">
                     <div class="col-lg-12 row mt-1">
                         <div class="col-lg-4 mb-3">
                             <p class="ml-2 mt-2">訂房日期:</p>
-                            <input type="date" name="arr_day">
+                            <input type="date" name="a_time" required>
                         </div>
                         <div class="col-lg-4 mb-3">
                             <p class="ml-2 mt-2">離開日期:</p>
-                            <input type="date" name="depart_day">
+                            <input type="date" name="d_time" required>
                         </div>
                         <div class="col-lg-4 mb-3">
                             <p class="ml-2 mt-2">訂房人數:</p>
-                            <input type="text" name="people">
+                            <input type="text" name="people" required>
                         </div>
                     </div>
                     <div class="col-lg-12 row mt-1">
                         <div class="col-lg-4">
                             <p class="ml-2 mt-2">房型:</p>
-                            <select name="room_style" required>
+                            <select name="inn_style" required>
                                 <optgroup label="單人">
-                                    <option value="01">豪華單人房</option>
-                                    <option value="02">尊榮單人房</option>
+                                    <option value="1">豪華單人房</option>
+                                    <option value="2">尊榮單人房</option>
                                 </optgroup>
                                 <optgroup label="雙人">
-                                    <option value="03">豪華雙床房</option>
-                                    <option value="04">尊榮雙人房</option>
+                                    <option value="3">豪華雙床房</option>
+                                    <option value="4">尊榮雙人房</option>
                                 </optgroup>
                                 <optgroup label="其他">
-                                    <option value="05">貴賓聖心套房</option>
+                                    <option value="5">貴賓聖心套房</option>
                                 </optgroup>
                             </select>
                         </div>
                         <div class="col-lg-4">
                             <p class="ml-2 mt-2">主辦單位/系名:</p>
-                            <input type="text" name="convi_con">
+                            <input type="text" name="place">
                         </div>
                         <div class="col-lg-4">
                             <p class="ml-2 mt-2">備註:</p>
-                            <input type="text" name="memo" maxlegth="50">
+                            <input type="text" name="note" maxlegth="50">
                         </div>
+                        <input type="hidden" name="account_id" value="<?php echo $account_id ?>">
                     </div>
 
-                    <div class="sub mt-5"><button onclick="appoint()">申請</button></div>
+                    <div class="sub mt-5"><button type="submit">申請</button></div>
                 </form>
             </center>
+            <script>
+                $('form').on('submit', function () {
+                    //送出表單前會觸發這部分
+                    $.ajax({
+                        url: 'appointment_output.php',      //要傳送的頁面
+                        method: 'post',
+                        dataType: 'json',           //回傳資料是json格式
+                        data: $('form').serialize(), //將表單資料用打包起來送出去
+                        success: function (res) {
+                            //成功之後會執行這個方法
+                            if (res.success == true) {
+                                Swal.fire({
+                                    allowOutsideClick: false,
+                                    icon: 'success',
+                                    html:
+                                        '<b>預約成功</b>',
+                                    focusConfirm: false,
+                                    confirmButtonText:
+                                        '<b style="color:white;text-decoration:none;">確定</b>',
+                                    confirmButtonAriaLabel: '確定',
+                                    confirmButtonClass: 'insert_button'
+                                }).then((result) => {
+                                    if(result.isConfirmed){
+                                        document.location.href = "index.php?method=appointment";
+                                    }
+                                })
+                            } else {
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    html:
+                                        '<b>' + res.checked + '</b>',
+                                    confirmButtonAriaLabel: '確定',
+                                    confirmButtonClass: 'insert_button',
+                                    confirmButtonText: '<b style="color:white;text-decoration:none;">確定</b>'
+                                })
+                            }
+                        },
+                    });
+                    return false; //阻止瀏覽器轉跳到 send.php，因為已經用ajax送出去了
+                })
+            </script>
         </div>
     </div>
 
@@ -159,7 +245,7 @@
     function info() {
         Swal.fire({
             title: '訂房須知',
-            html: '需於三日前訂房；入住當日無法退房；其他請參考首頁',
+            html: '需於三日前訂房；入住當日無法退房；其他請參考首頁;',
             icon: "info",
             confirmButtonText: "確定"
         });

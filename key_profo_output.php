@@ -56,9 +56,9 @@ if($password != $password2){
 
 if($error_check != false){
     $sql->execute([$name,$account_id,$phone,$password,'管理者']);
-    echo '{"success":true}';
+    header("location:index.php?method=message&message=true");
 }else{
-    echo '{"success":false,"checked":"'.$checked.'"}';
+    header("location:index.php?method=message&message=false");
     // echo "<script>alert('有錯誤');window.history.back(-1);</script>";die;
 }
 

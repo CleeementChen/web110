@@ -11,6 +11,7 @@
             case "board":include "board.php";break;
             case "profo":include "profo.php";break;
             case "key_profo":include "key_profo.php";break;
+            case "message":include "message.php";break;
             case "e-chart":include "e-chart.php";break;
             default: include "home.php";
         }

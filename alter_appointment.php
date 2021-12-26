@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<?php
+    session_start();
+    $account_id = $_SESSION['account']['account_id'];
+    $id = $_GET['id'];
+?>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -147,28 +151,40 @@
         }
 
     </style>
+    <?php
+        $pdo = new PDO('mysql:host=localhost;dbname=fjcu_inn;charset=utf8', 'root', '');
+        $sql = $pdo->query("select r.a_time, r.d_time, r.people, p.place, n.note from appointment_record r, appointment_place p, appointment_note n where r.id = '$id' and r.id = p.id and r.id = n.id");
+        
+        foreach($sql as $sql){
+            $a_time = $sql['a_time'];
+            $d_time = $sql['d_time'];
+            $people = $sql['people'];
+            $place = $sql['place'];
+            $note = $sql['note'];
+        }
+    ?>
     <div class="center">
-        <div class="x-icon"><a href="key_appointment.php"><center><i class="fas fa-times"></i></center></a></div>
+        <div class="x-icon"><a href="index.php?method=appointment"><center><i class="fas fa-times"></i></center></a></div>
         <h1><i class="fas fa-wrench"></i> 訂房更改</h1>
         <form action="key_appointment.php" method="post">
-        <div class="txt_field">
-                <input type="text" name="id" required>
+            <!-- <div class="txt_field"> -->
+                <input type="hidden" name="id" required>
                 <span></span>
-                <label>訂單編號:00001</label>
-            </div>
+                <label>訂單編號:<?php echo $id?></label>
+            <!-- </div> -->
         <div class="txt_field">
-                <input type="date" name="arr_date" required>
+                <input type="date" name="arr_date" value="<?php echo $a_time ?>" required>
                 <span></span>
  
             </div>
             <div class="txt_field">
-                <input type="date" name="depart_date" required>
+                <input type="date" name="depart_date" value="<?php echo $d_time ?>" required>
                 <span></span>
             </div>    
             <div class="txt_field">
-                <input type="text" name="people" maxlength="1" required>
+                <input type="text" name="people" maxlength="1" value = "<?php echo $people ?>" required>
                 <span></span>
-                <label>人數:1</label>
+                <label>人數 </label>
             </div>        
         <div class="txt_field">
                 <input type="text" name="room" required>

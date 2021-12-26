@@ -134,7 +134,7 @@
             <?php
                 }elseif($status == '管理者'){
             ?>
-            <li class="nav-item <?php if($method == 'profo'){echo " active";}?>">
+            <li class="nav-item <?php if($method == 'key_profo'){echo " active";}?>">
                 <a class="nav-link" href="index.php?method=key_profo">
                     <i class="fas fa-user"></i>
                     <span>使用者帳號管理</span></a>

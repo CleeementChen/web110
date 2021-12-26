@@ -4,6 +4,8 @@
     session_start();
 ?>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.all.min.js"></script>
+
 <div class="container-fluid mt-4">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">個人資料</h1>
@@ -50,6 +52,29 @@
         .sub {
             margin: 30px;
         }
+       
+        .change-pass{
+            width: 120px;
+            height: 50px;
+            text-align: center;
+            font-size: 18px;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 25px;
+            margin: 20px;
+            padding: 10px;
+            background: #4e73df;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            border: solid #4e73df;
+        }
+
+        .outer a{
+            outline: none;
+            text-decoration: none;
+        }
+
     </style>
 
     
@@ -83,12 +108,18 @@
                         
                     </div>
 
-                    <div class="sub mt-5"><input type="submit" value="新增"></div>
+                    <div class="sub mt-5"><input type="submit" id = "p1" value="新增"></div>
                 </form>
                 
             </center>
             
         </div>
+    </div>
+
+    <div class="outer mt-5">
+        <center>
+            <a href="change_password.php?id=<?php echo $account_id; ?>"><div class="change-pass">更改密碼</div></a>
+        </center>
     </div>
 
 </div>

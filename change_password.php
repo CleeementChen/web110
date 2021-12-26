@@ -160,7 +160,7 @@
     </style>
 
     <div class="center">
-        <div class="x-icon"><a href="index.php?method=profo"><center><i class="fas fa-times"></i></center></a></div>
+        <div class="x-icon"><a href="index.php?method=home"><center><i class="fas fa-times"></i></center></a></div>
         <h1><i class="fas fa-user-lock"></i> 修改密碼</h1>
         <form action="change_password_output.php" method="post">
                 <input type="hidden" name="account_id" value = "<?php echo $_GET['id']?>">
