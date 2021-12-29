@@ -2,13 +2,14 @@
 <?php include "band.php"; ?>
 <?php
 $pdo = new PDO('mysql:host=localhost;dbname=fjcu_inn;charset=utf8','root', '');
+$status = $_SESSION['account']['status'];  //紀錄身分
 
-$status = $pdo->query("select status from account where account_id = '$account_id' ");
-
-foreach($status as $status){
-    $check = $status['status'];
-}
 ?>
+<style>
+    h4{
+        margin-left: 3.5rem;
+    }
+</style>
 <div class="container-fluid mt-4">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">預約清單</h1>
@@ -17,18 +18,22 @@ foreach($status as $status){
 
         <?php
 
-                if($check == '使用者'){
-                    $sql = $pdo->query("select * from appointment_record where status = '已預訂' and account_id = '$account_id' ");
+                if($status == '使用者'){
+                    $sql = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.account_id = '$account_id' and r.inn_style = i.id");
+                    $sql2 = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.account_id = '$account_id' and r.inn_style = i.id");  //session有紀錄
                 }else{
-                    $sql = $pdo->query("select * from appointment_record where status = '已預訂' ");
+                    $sql = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.inn_style = i.id");
+                    $sql2 = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.inn_style = i.id");
                 }
                 
-                
-                foreach($sql as $sql){
-                    $id = $sql['id'];
-                    $a_time = $sql['a_time'];
-                    $d_time = $sql['d_time'];
-                    $inn_style = $sql['inn_style'];
+                $isNull = $sql2->fetch();
+
+                if($isNull == true){
+                    foreach($sql as $sql){
+                        $id = $sql['id'];
+                        $a_time = $sql['a_time'];
+                        $d_time = $sql['d_time'];
+                        $inn_style = $sql['name'];
         ?>
 
                     <div class="col-lg-4">
@@ -38,24 +43,36 @@ foreach($status as $status){
                                 <p>房型: <?php echo $inn_style ?></p>
                                 <p>訂房日期: <?php echo $a_time ?> -> 離開日期: <?php echo $d_time ?></p>
                                 <?php
-                                    if($check == '管理者'){
+                                    if($status == '管理者'){
                                 ?>
+
+                                <a href="##" class="btn btn-success btn-circle mr-2" onclick="check(<?php echo $id ?>)">
+                                    <i class="fas fa-check"></i>
+                                </a>
+
                                 <a href="##" class="btn btn-warning btn-circle mr-2" onclick="alt(<?php echo $id ?>)">
                                     <i class="fas fa-wrench"></i>
                                 </a>
                                 <?php        
                                     }
                                 ?>
-                                <a href="##" class="btn btn-danger btn-circle" onclick="del(<?php echo $id ?>)">
+                                <a href="##" class="btn btn-danger btn-circle mr-2" onclick="del(<?php echo $id ?>)">
                                     <i class="fas fa-trash"></i>
                                 </a>
+
                             </div>
                         </div>
                     </div>
         
         <?php
+                    }
+                }else{
+        ?>
+                <h4 class="mb-5">尚無預約紀錄</h4>
+        <?php
                 }
                 $sql = NULL;
+                $sql2 = NULL;
             
             // $result = NULL; 
         ?>
@@ -90,7 +107,22 @@ foreach($status as $status){
             });
         }
 
+        function check(id) {
+            Swal.fire({
+                showCancelButton: "true",
+                title: '客戶已付款，完成此訂單?',
+                icon: "question",
+                confirmButtonText: "確定",
+                cancelButtonText: "取消"
+            }).then((result) => {                   /*是否確定*/
+                if (result.isConfirmed) {    
+                    document.location.href="check_appointment.php?id="+id;   /*確認轉址 */
+                }
+            });
+        }
+
     </script>
+    <?php if($status == '使用者'){ ?>
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">預約訂房</h1>
@@ -164,11 +196,14 @@ foreach($status as $status){
                             <input type="text" name="people" required>
                         </div>
                     </div>
+                    <??>
                     <div class="col-lg-12 row mt-1">
                         <div class="col-lg-4">
                             <p class="ml-2 mt-2">房型:</p>
                             <select name="inn_style" required>
+                                    <option value="">選擇房間</option>
                                 <optgroup label="單人">
+                                <!-- disabled="disabled" -->
                                     <option value="1">豪華單人房</option>
                                     <option value="2">尊榮單人房</option>
                                 </optgroup>
@@ -189,7 +224,7 @@ foreach($status as $status){
                             <p class="ml-2 mt-2">備註:</p>
                             <input type="text" name="note" maxlegth="50">
                         </div>
-                        <input type="hidden" name="account_id" value="<?php echo $account_id ?>">
+                        <!-- <input type="hidden" name="account_id" value=""> -->
                     </div>
 
                     <div class="sub mt-5"><button type="submit">申請</button></div>
@@ -239,7 +274,7 @@ foreach($status as $status){
             </script>
         </div>
     </div>
-
+    <?php } ?>
 </div>
 <script>
     function info() {

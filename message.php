@@ -16,30 +16,44 @@
         outline: none;
         color: #fff;
         border: solid #4e73df;
+
+        position: absolute;
+        bottom: 1.5rem;
+        left: 48%;
+        transform: translate(-50%, -50%);
     }
 
     .outer a{
         outline: none;
         text-decoration: none;
+
+
     }
 </style>
 <div class="container-fluid mt-4">
     
     
     <div class="card mt-4 mb-4 py-3 border-bottom-primary" style="height: 20rem;">
-        <p class="ml-3">新增管理帳號</p>
         <div class="card-body text-alter">
-            <center><h1>
+            <center>
             <?php
                 $result = $_GET['message'];
 
                 if($result == "true"){
-                    echo "新增成功";
-                }else{
-                    echo "新增失敗";
+                    echo "<h1>新增成功</h1>";
+                }elseif($result == "false"){
+                    echo "<h1>新增失敗</h1>";
+                    echo "<p>請注意帳號是否有人使用；格式是否正確!</p>";
+                }elseif($result == "inn_true"){
+                    echo "<h1>刪除成功</h1>";
+                }elseif ($result == "inn_false"){
+                    echo "<h1>刪除失敗</h1>";
+                    echo "<p>當天住宿預約無法刪除，或者洽詢服務人員。</p>";
+                }elseif($result == "checkit"){
+                    echo "<h1>此訂單完成</h1>";
                 }
             ?>
-            </h1><p>請注意帳號是否有人使用；格式是否正確!</p></center>
+            </center>
 
             <div class="outer">
             <center>

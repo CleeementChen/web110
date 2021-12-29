@@ -150,55 +150,138 @@
             transition: .5s;
         }
 
+        select{
+            width: 100%;
+            padding: 0.2rem;
+            font-size: 16px;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-bottom: none;
+            outline: none;
+        }
+
     </style>
     <?php
         $pdo = new PDO('mysql:host=localhost;dbname=fjcu_inn;charset=utf8', 'root', '');
-        $sql = $pdo->query("select r.a_time, r.d_time, r.people, p.place, n.note from appointment_record r, appointment_place p, appointment_note n where r.id = '$id' and r.id = p.id and r.id = n.id");
+        $sql = $pdo->query("select a_time, d_time, people, inn_style from appointment_record where id = '$id'");
         
         foreach($sql as $sql){
             $a_time = $sql['a_time'];
             $d_time = $sql['d_time'];
             $people = $sql['people'];
-            $place = $sql['place'];
-            $note = $sql['note'];
+            $inn_style = $sql['inn_style'];
         }
+        $sql = NULL;
+
+        $sql2 = $pdo->query("select note from appointment_note where id = '$id'");
+        foreach($sql2 as $sql2){
+            $note = $sql2['note'];
+        }
+        $sql2 = NULL;
+
+        $sql3 = $pdo->query("select place from appointment_place where id = '$id'");
+        foreach($sql3 as $sql3){
+            $place = $sql3['place'];
+        }
+        $sql3 = NULL;
     ?>
     <div class="center">
         <div class="x-icon"><a href="index.php?method=appointment"><center><i class="fas fa-times"></i></center></a></div>
         <h1><i class="fas fa-wrench"></i> 訂房更改</h1>
-        <form action="key_appointment.php" method="post">
+        <form action="alter_appointment_output.php" method="post">
             <!-- <div class="txt_field"> -->
                 <input type="hidden" name="id" required>
                 <span></span>
-                <label>訂單編號:<?php echo $id?></label>
+                <label>訂單編號: <?php echo $id ?></label>
             <!-- </div> -->
-        <div class="txt_field">
-                <input type="date" name="arr_date" value="<?php echo $a_time ?>" required>
+            <div class="txt_field">
+                <input type="date" name="a_time" value="<?php echo $a_time ?>" required>
                 <span></span>
  
             </div>
             <div class="txt_field">
-                <input type="date" name="depart_date" value="<?php echo $d_time ?>" required>
+                <input type="date" name="d_time" value="<?php echo $d_time ?>" required>
                 <span></span>
             </div>    
             <div class="txt_field">
                 <input type="text" name="people" maxlength="1" value = "<?php echo $people ?>" required>
                 <span></span>
-                <label>人數 </label>
+                <label>人數</label>
             </div>        
-        <div class="txt_field">
-                <input type="text" name="room" required>
-                <span></span>
-                <label>豪華單人房</label>
-            </div>
-            
             <div class="txt_field">
-            <input type="text" name="room" maxlength="50" required>
-                <span></span>
-                <label>備註:無</label>
+                <select name="inn_style" required>
+                    <optgroup label="單人">
+                    <!-- disabled="disabled" -->
+                        <option value="1" <?php if($inn_style == 1){ echo 'selected="selected"'; }?>>豪華單人房</option>
+                        <option value="2" <?php if($inn_style == 2){ echo 'selected="selected"'; }?>>尊榮單人房</option>
+                    </optgroup>
+                    <optgroup label="雙人">
+                        <option value="3" <?php if($inn_style == 3){ echo 'selected="selected"'; }?>>豪華雙人房</option>
+                        <option value="4" <?php if($inn_style == 4){ echo 'selected="selected"'; }?>>尊榮雙人房</option>
+                    </optgroup>
+                    <optgroup label="其他">
+                        <option value="5" <?php if($inn_style == 5){ echo 'selected="selected"'; }?>>貴賓聖心套房</option>
+                    </optgroup>
+                </select>
             </div>
+            <div class="txt_field">
+                <input type="text" name="place" maxlength="50" value = "<?php echo $place ?>">
+                <span></span>
+                <label>主辦單位/系名:</label>
+            </div>
+            <div class="txt_field">
+            <input type="text" name="note" maxlength="50" value = "<?php echo $note ?>">
+                <span></span>
+                <label>備註</label>
+            </div>
+            <input type="hidden" name="id" value="<?php echo $id ?>">
             <input type="submit" value="更改">
         </form>
+
+        <script>
+            $('form').on('submit', function () {
+                //送出表單前會觸發這部分
+                $.ajax({
+                    url: 'alter_appointment_output.php',      //要傳送的頁面
+                    method: 'post',
+                    dataType: 'json',           //回傳資料是json格式
+                    data: $('form').serialize(), //將表單資料用打包起來送出去
+                    success: function (res) {
+                        //成功之後會執行這個方法
+                        if (res.success == true) {
+                            Swal.fire({
+                                allowOutsideClick: false,
+                                icon: 'success',
+                                html:
+                                    '<b>修改成功</b>',
+                                focusConfirm: false,
+                                confirmButtonText:
+                                    '<b style="color:white;text-decoration:none;">確定</b>',
+                                confirmButtonAriaLabel: '確定',
+                                confirmButtonClass: 'insert_button'
+                            }).then((result) => {
+                                if(result.isConfirmed){
+                                    document.location.href = "index.php?method=appointment";
+                                }
+                            })
+                        } else {
+
+                            Swal.fire({
+                                icon: 'error',
+                                html:
+                                    '<b>' + res.checked + '</b>',
+                                confirmButtonAriaLabel: '確定',
+                                confirmButtonClass: 'insert_button',
+                                confirmButtonText: '<b style="color:white;text-decoration:none;">確定</b>'
+                            })
+                        }
+                    },
+                });
+                return false; //阻止瀏覽器轉跳到 send.php，因為已經用ajax送出去了
+            })
+        </script>
+
     </div>
 </body>
 

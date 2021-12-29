@@ -206,7 +206,7 @@
                         confirmButtonClass: 'insert_button'
                     }).then((result) => {                   /*是否確定*/
                         if (result.isConfirmed) {
-                            document.location.href = "index.php?method=profo";   /*確認轉址 */
+                            document.location.href = "index.php?method=home";   /*確認轉址 */
                         }
                     });
                 } else {
