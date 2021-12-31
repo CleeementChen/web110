@@ -250,6 +250,7 @@
                 <label>備註</label>
             </div>
             <input type="hidden" name="id" value="<?php echo $id ?>">
+            <input type="hidden" name="org_inn" value="<?php echo $inn_style ?>">
             <input type="submit" value="更改">
         </form>
 

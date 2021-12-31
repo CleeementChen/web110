@@ -43,16 +43,50 @@ $status = $_SESSION['account']['status'];  //紀錄身分
                                 <p>房型: <?php echo $inn_style ?></p>
                                 <p>訂房日期: <?php echo $a_time ?> -> 離開日期: <?php echo $d_time ?></p>
                                 <?php
-                                    if($status == '管理者'){
+                                    $check_place = $pdo->query("select place from appointment_place where id='$id'");
+                                    $isNull_p = $check_place->fetch();
+                                    if($isNull_p == true){   #如果有資料，將他加入
+                                        $check_place = $pdo->query("select place from appointment_place where id='$id'");
+                                        foreach($check_place as $check_place){
+                                            $place = $check_place['place'];
+                                        }
+                                        $check_place = NULL;    
+                                ?>
+                                    <p>預約地點: <?php echo $place; ?></p>
+                                <?php
+                                    }else{
+                                ?>
+                                    <p>預約地點: <?php echo "無"; ?></p>
+                                <?php
+                                    }
+
+                                    $check_note = $pdo->query("select note from appointment_note where id='$id'");
+                                    $isNull_n = $check_note->fetch();
+                                    if($isNull_n == true){  #如果有資料，將他加入
+                                        $check_note = $pdo->query("select note from appointment_note where id='$id'");
+                                        foreach($check_note as $check_note){
+                                            $note = $check_note['note'];
+                                        }
+                                        $check_note = NULL;
+                                ?>
+                                    <p>備註: <?php echo $note; ?></p>
+                                <?php    
+                                    }else{
+                                ?>
+                                    <p>備註: <?php echo "無"; ?></p>
+                                <?php
+                                    }
+
+                                    if($status == '管理者'){ #管理者多兩個按鈕
                                 ?>
 
-                                <a href="##" class="btn btn-success btn-circle mr-2" onclick="check(<?php echo $id ?>)">
-                                    <i class="fas fa-check"></i>
-                                </a>
+                                    <a href="##" class="btn btn-success btn-circle mr-2" onclick="check(<?php echo $id ?>)">
+                                        <i class="fas fa-check"></i>
+                                    </a>
 
-                                <a href="##" class="btn btn-warning btn-circle mr-2" onclick="alt(<?php echo $id ?>)">
-                                    <i class="fas fa-wrench"></i>
-                                </a>
+                                    <a href="##" class="btn btn-warning btn-circle mr-2" onclick="alt(<?php echo $id ?>)">
+                                        <i class="fas fa-wrench"></i>
+                                    </a>
                                 <?php        
                                     }
                                 ?>
@@ -122,7 +156,7 @@ $status = $_SESSION['account']['status'];  //紀錄身分
         }
 
     </script>
-    <?php if($status == '使用者'){ ?>
+    <?php if($status == '使用者'){ ?>     <!--使用者可以填表單-->
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">預約訂房</h1>
