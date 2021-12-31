@@ -1,3 +1,4 @@
+<?php include "session_check.php"; ?>
 <?php
 
 $account_id=$_POST["account_id"];

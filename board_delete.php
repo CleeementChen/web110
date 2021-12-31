@@ -1,3 +1,4 @@
+<?php include "session_check.php"; ?>
 <?php
 
     $id = $_GET['id'];

@@ -1,4 +1,5 @@
 <!-- 不可刪 -->
+<?php include "session_check.php"; ?>
 <?php
 $name=$_POST["name"];
 $account_id=$_POST["account_id"];
