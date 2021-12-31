@@ -1,6 +1,35 @@
 <?php include "header.php"; ?>
 <?php include "band.php"; ?>
+<?php
+    $pdo = new PDO('mysql:host=localhost;dbname=fjcu_inn;charset=utf8', 'root', '');
+    $year = date('Y');
+    $month = date('m');
+    // $today = date("Y-m-d",strtotime("-1 day"));
+    // echo $today;
+    $room_earn_per_month = array();
+    $room_total = array();
+    // echo "$year $month ";
 
+    $sql = $pdo->query("select id, name, price from inn");
+    foreach($sql as $sql){
+        $r_id = $sql['id'];
+        $name = $sql['name'];
+        $price = $sql['price'];
+
+        $sql2 = $pdo->query("select count(inn_style), inn_style from appointment_record 
+            where year(a_time) = '$year' and month(a_time) = '$month' and inn_style = '$r_id' and status = '完成' ");
+        foreach($sql2 as $sql2){
+            $room_sum_temp = $sql2['count(inn_style)'];
+        }
+
+        // echo "$price $room_sum ";
+        $room_earn_per_month[$name] = $price*$room_sum_temp;
+        $room_total[$name] = $room_sum_temp;
+    }
+    $sql = NULl;
+    $sql2 = NULL;
+    // print_r($room_earn_per_month);
+?>
 <!-- Begin Page Content -->
 <div class="container-fluid mt-4">
 
@@ -19,7 +48,10 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                 本月營收冠軍房型</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">尊榮雙人房</div>
+                                <?php
+                                    $champion = array_search(max($room_earn_per_month),$room_earn_per_month);
+                                ?>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $champion ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-crown fa-2x text-gray-300"></i>
@@ -37,8 +69,10 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             豪華單人房</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:$11000</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:11</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:
+                                <?php echo "$".$room_earn_per_month['豪華單人房']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:
+                            <?php echo $room_total['豪華單人房']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -56,8 +90,10 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             尊榮單人房</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:$1500</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:1</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:
+                                <?php echo "$".$room_earn_per_month['尊榮單人房']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:
+                                <?php echo $room_total['尊榮單人房']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -74,9 +110,11 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            豪華雙床房</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:$1500</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:1</div>
+                            豪華雙人房</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:
+                                <?php echo "$".$room_earn_per_month['豪華雙人房']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:
+                                <?php echo $room_total['豪華雙人房']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -94,8 +132,10 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             尊榮雙人房</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:$30000</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:15</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:
+                                <?php echo "$".$room_earn_per_month['尊榮雙人房']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:
+                                <?php echo $room_total['尊榮雙人房']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -113,8 +153,10 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             貴賓聖心套房</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:$2500</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:1</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">本月營收:
+                                <?php echo "$".$room_earn_per_month['貴賓聖心套房']; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">入住次數:
+                                <?php echo $room_total['貴賓聖心套房']; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -164,18 +206,20 @@
     </div>
 
 </div>
+
 <script>
+
     google.charts.load('current', { packages: ['corechart', 'bar'] });
         google.charts.setOnLoadCallback(drawRightY);
 
         function drawRightY() {
             var data = google.visualization.arrayToDataTable([
-                [' ', '11月份'],
-                ['豪華單人房', 11000],
-                ['尊榮單人房', 1500],
-                ['豪華雙床房', 1500],
-                ['尊榮雙人房', 30000],
-                ['貴賓聖心套房', 2500]
+                [' ', '<?php echo $month; ?>月份'],
+                ['豪華單人房', <?php echo $room_earn_per_month['豪華單人房']; ?>],
+                ['尊榮單人房', <?php echo $room_earn_per_month['尊榮單人房']; ?>],
+                ['豪華雙人房', <?php echo $room_earn_per_month['豪華雙人房']; ?>],
+                ['尊榮雙人房', <?php echo $room_earn_per_month['尊榮雙人房']; ?>],
+                ['貴賓聖心套房', <?php echo $room_earn_per_month['貴賓聖心套房']; ?>]
             ]);
 
             var materialOptions = {
@@ -201,18 +245,42 @@
             materialChart.draw(data, materialOptions);
         }
 </script>
+<?php
+    $year = date('Y');
+    $chinese_year = $year - 1911;
+    $room_earn_year = array();
+    // echo $last_year;
+
+    $y_sql = $pdo->query("select id, name, price from inn");
+    foreach($y_sql as $y_sql){
+        $y_r_id = $y_sql['id'];
+        $y_name = $y_sql['name'];
+        $y_price = $y_sql['price'];
+
+        $y_sql2 = $pdo->query("select count(inn_style), inn_style from appointment_record 
+            where year(a_time) = '$year' and inn_style = '$y_r_id' and status = '完成' ");
+        foreach($y_sql2 as $y_sql2){
+            $sum_temp = $y_sql2['count(inn_style)'];
+        }
+
+        $room_earn_year[$y_name] = $sum_temp * $y_price;
+        // echo "$price $room_sum ";    
+    }
+    $y_sql = NULL;
+    $y_sql2 = NULL;
+?>
 <script>
         google.charts.load('current', { packages: ['corechart', 'bar'] });
         google.charts.setOnLoadCallback(drawRightY);
 
         function drawRightY() {
             var data = google.visualization.arrayToDataTable([
-                [' ', '110年'],
-                ['豪華單人房', 38155],
-                ['尊榮單人房', 587940],
-                ['豪華雙床房', 39155],
-                ['尊榮雙人房', 89155],
-                ['貴賓聖心套房', 91505]
+                [' ', '<?php echo $chinese_year; ?>年'],
+                ['豪華單人房', <?php echo $room_earn_year['豪華單人房']; ?>],
+                ['尊榮單人房', <?php echo $room_earn_year['尊榮單人房']; ?>],
+                ['豪華雙人房', <?php echo $room_earn_year['豪華雙人房']; ?>],
+                ['尊榮雙人房', <?php echo $room_earn_year['尊榮雙人房']; ?>],
+                ['貴賓聖心套房', <?php echo $room_earn_year['貴賓聖心套房']; ?>]
             ]);
 
             var materialOptions = {

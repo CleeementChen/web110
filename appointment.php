@@ -19,10 +19,10 @@ $status = $_SESSION['account']['status'];  //紀錄身分
         <?php
 
                 if($status == '使用者'){
-                    $sql = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.account_id = '$account_id' and r.inn_style = i.id");
+                    $sql = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.account_id = '$account_id' and r.inn_style = i.id order by a_time");
                     $sql2 = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.account_id = '$account_id' and r.inn_style = i.id");  //session有紀錄
                 }else{
-                    $sql = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.inn_style = i.id");
+                    $sql = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.inn_style = i.id order by a_time");
                     $sql2 = $pdo->query("select r.id, r.a_time, r.d_time, i.name from appointment_record r, inn i where r.status = '已預訂' and r.inn_style = i.id");
                 }
                 

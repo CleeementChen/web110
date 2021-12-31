@@ -11,7 +11,7 @@
         <h1 class="h3 mb-0 text-gray-800">個人資料</h1>
     </div>
 
-    <center><h1>歡迎管理者 <?php echo $_SESSION['account']['account_id']; ?></h1></center>
+    <center><h1>歡迎管理者 <?php echo $_SESSION['account']['name']; ?></h1></center>
     <style>
         select,
         input[type="text"],

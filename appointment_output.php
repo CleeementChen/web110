@@ -11,7 +11,7 @@
     $note = $_POST['note'];
     $inn_style = $_POST['inn_style'];
     
-
+    $three_day = date("Y-m-d",strtotime("+3 day")); //檢查三天前
     $num_check = 0;  //期間房型數量
     $room_num_check = 0; //查詢飯店房間
 
@@ -30,15 +30,14 @@
     }
     $room_num = NULL;
 
-    // echo $room_num_check;
-    // echo $num_check;
-
     if($num_check >= $room_num_check){
         echo '{"success": false,"checked":"此期間房間已滿"}';
     }elseif($d_time <= $a_time){
         echo '{"success": false,"checked":"時間填寫有誤"}';
     }elseif($a_time <= date("Y-m-d")){
         echo '{"success": false,"checked":"請填寫有效時間"}';
+    }elseif($a_time < $three_day){
+        echo '{"success": false,"checked":"非於前三日登記無法預約"}';
     }else{
         $sql = $pdo->prepare("insert into appointment_record (account_id, a_time ,d_time ,inn_style ,people ,status) VALUES(?,?,?,?,?,?)");
         $sql->execute([$account_id, $a_time, $d_time, $inn_style, $people, '已預訂']);
@@ -66,12 +65,5 @@
         $sql3 = NULL;
 
         echo '{"success":true}';
-
     }
-    
-    
-    
-
-
-    // // header('location:index.php?method=message');
 ?>

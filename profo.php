@@ -1,12 +1,13 @@
 <?php include "header.php"; ?>
 <?php include "band.php"; ?>
 <?php
+    session_start();
+    $account_id = $_SESSION['account']['account_id'];
+    $name = $_SESSION['account']['name'];
+    $phone = $_SESSION['account']['phone'];
+    $status = $_SESSION['account']['status'];
 
-$account_id = $_SESSION['account']['account_id'];
-$name = $_SESSION['account']['name'];
-$phone = $_SESSION['account']['phone'];
-$status = $_SESSION['account']['status'];
-
+    $pdo = new PDO('mysql:host=localhost;dbname=fjcu_inn;charset=utf8', 'root', '');
 ?>
 
 <style>
@@ -32,8 +33,6 @@ $status = $_SESSION['account']['status'];
         text-decoration: none;
     }
 </style>
-
-
 
 <div class="container-fluid mt-4">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -87,7 +86,14 @@ $status = $_SESSION['account']['status'];
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 訂房次數
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">10</div>
+                            <?php
+                                $sql = $pdo->query("select count(id) from appointment_record 
+                                    where status = '完成' and account_id = '$account_id' ");
+                                foreach($sql as $sql){
+                                    $sql = $sql['count(id)'];
+                                }
+                            ?>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $sql; ?></div>
                         </div>  
                     </div>
                 </div>
@@ -102,9 +108,16 @@ $status = $_SESSION['account']['status'];
                         </div>
                         <div class="col ml-4">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                最近一次訂房紀錄
+                                最近一次入住
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">2021/09/28</div>
+                            <?php
+                                $sql2 = $pdo->query("select max(d_time) from appointment_record
+                                    where status = '完成' and account_id = '$account_id'");
+                                foreach($sql2 as $sql2){
+                                    $sql2 = $sql2['max(d_time)'];
+                                }
+                            ?>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $sql2; ?></div>
                         </div>  
                     </div>
                 </div>
