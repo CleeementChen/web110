@@ -30,9 +30,7 @@
 
     }
 </style>
-<div class="container-fluid mt-4">
-    
-    
+<div class="container-fluid mt-4">    
     <div class="card mt-4 mb-4 py-3 border-bottom-primary" style="height: 20rem;">
         <div class="card-body text-alter">
             <center>
@@ -60,12 +58,7 @@
                 <a href="index.php?method=home"><div class="change-pass">回首頁</div></a>
             </center>
             </div>
-
         </div>
     </div>
-
 </div>
-
-    
-
 <?php include "footer.php"; ?>

@@ -44,7 +44,8 @@
         $sql = NULL;
 
 
-        $s_id = $pdo->query("select id from appointment_record where account_id = '$account_id' and a_time = '$a_time' and d_time = '$d_time' and people='$people'  ");
+        $s_id = $pdo->query("select id from appointment_record where account_id = '$account_id' and a_time = '$a_time' and d_time = '$d_time' 
+            and people='$people'  ");
 
         foreach($s_id as $s_id){
             $s_id = $s_id['id'];
